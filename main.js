@@ -26,7 +26,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 
   // ── Global scale: the highest scenario total drives the circle size ──────
-  // value_scenario is pre-computed as the total (all steps summed) per scenario.
   const globalMaxCumulative = d3.max(rawData, d => d.value_scenario);
 
   // ── Initialise one chart per scenario ────────────────────────────────────
@@ -39,24 +38,43 @@ document.addEventListener("DOMContentLoaded", async () => {
     charts[s] = new EnergyRiskChart(el, s, rawData, globalMaxCumulative);
   });
 
-  // ── IntersectionObserver per scenario ────────────────────────────────────
-  SCENARIOS.forEach(s => {
-    const cards = document.querySelectorAll(`.card[data-viz="scenario-${s}"]`);
-    if (!cards.length) return;
+  // ── Scroll-based step tracking (works on both downscroll and upscroll) ───
+  const cardSets = SCENARIOS.map(s => ({
+    s,
+    cards:    Array.from(document.querySelectorAll(`.card[data-viz="scenario-${s}"]`)),
+    lastStep: null,
+  })).filter(entry => entry.cards.length > 0);
 
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (!entry.isIntersecting) return;
-        const step = +entry.target.dataset.step;
-        cards.forEach(c => c.classList.remove("active"));
-        entry.target.classList.add("active");
-        console.log(`Scenario ${s} — step ${step}`);
-        charts[s]?.updateStep(step);
+  function onScroll() {
+    const triggerY = window.innerHeight * 0.5;
+
+    cardSets.forEach((entry, idx) => {
+      const { s, cards } = entry;
+      let bestCard = null;
+      let bestDist = Infinity;
+
+      cards.forEach(card => {
+        const rect = card.getBoundingClientRect();
+        if (rect.bottom < -window.innerHeight || rect.top > window.innerHeight * 2) return;
+        const cardMid = rect.top + rect.height / 2;
+        const dist    = Math.abs(cardMid - triggerY);
+        if (dist < bestDist) { bestDist = dist; bestCard = card; }
       });
-    }, { threshold: 0.5 });
 
-    cards.forEach(card => observer.observe(card));
-  });
+      if (!bestCard) return;
+
+      const step = +bestCard.dataset.step;
+      if (step !== cardSets[idx].lastStep) {
+        cardSets[idx].lastStep = step;
+        cards.forEach(c => c.classList.remove("active"));
+        bestCard.classList.add("active");
+        charts[s]?.updateStep(step);
+      }
+    });
+  }
+
+  window.addEventListener("scroll", onScroll, { passive: true });
+  onScroll(); // paint initial state if cards already visible
 
   // ── Resize ───────────────────────────────────────────────────────────────
   window.addEventListener("resize", () => {
