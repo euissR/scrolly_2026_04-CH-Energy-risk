@@ -1,0 +1,171 @@
+/* ============================================================
+   ENERGY RISK SCENARIOS — styles.css
+   Follows the same structural conventions as previous EUISS
+   scrollytelling publications.
+   ============================================================ */
+
+/* ── Scenario containers ─────────────────────────────────── */
+
+.container-scenario-1,
+.container-scenario-2,
+.container-scenario-3,
+.container-scenario-4,
+.container-scenario-5 {
+  position: relative;
+  max-width: 1200px;
+  z-index: 1;
+  min-height: 100vh;
+  margin-bottom: 0;
+}
+
+/* ── Visualization panels ────────────────────────────────── */
+
+#visualization-scenario-1,
+#visualization-scenario-2,
+#visualization-scenario-3,
+#visualization-scenario-4,
+#visualization-scenario-5 {
+  width: 100%;
+  height: 100%;
+  max-height: 100vh;
+  max-width: 1200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* ── Sticky containers (matches existing pattern) ────────── */
+
+.sticky-container {
+  position: sticky;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+  margin-left: calc(-50vw + 50%);
+}
+
+/* ── Scroll content columns ──────────────────────────────── */
+
+.scroll-content-scenario-1,
+.scroll-content-scenario-2,
+.scroll-content-scenario-3,
+.scroll-content-scenario-4,
+.scroll-content-scenario-5 {
+  position: relative;
+  width: 50%;
+  padding-right: 20px;
+  padding-left:  20px;
+  z-index: 3;
+  pointer-events: none;
+  padding-bottom: 20vh;
+}
+
+.scroll-content-scenario-1 a,
+.scroll-content-scenario-2 a,
+.scroll-content-scenario-3 a,
+.scroll-content-scenario-4 a,
+.scroll-content-scenario-5 a {
+  pointer-events: auto;
+}
+
+/* ── Cards ───────────────────────────────────────────────── */
+
+.card {
+  width: 80%;
+  margin-bottom: 80vh;
+  padding: 20px;
+  background-color: rgba(255, 255, 255, 0.92) !important;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  pointer-events: auto;
+  transition: opacity 0.3s ease;
+}
+
+.card[data-step="1"] { margin-top: 40vh; }
+.card.active         { background-color: rgba(255, 255, 255, 0.97) !important; }
+
+/* ── SVG elements ────────────────────────────────────────── */
+
+.energy-risk-svg {
+  display: block;
+  overflow: visible;
+}
+
+.risk-cell {
+  cursor: pointer;
+  transition: stroke-width 0.15s;
+}
+
+.risk-cell:hover {
+  stroke-width: 2px !important;
+  stroke: rgba(255, 255, 255, 0.9) !important;
+}
+
+.risk-label {
+  font-family: inherit;
+  user-select: none;
+}
+
+/* ── Legend ──────────────────────────────────────────────── */
+
+.risk-legend text {
+  font-family: inherit;
+}
+
+/* ── Tooltip (shared with existing publications) ─────────── */
+
+.tooltip,
+.risk-tooltip {
+  position: absolute;
+  font-size: 12px;
+  line-height: 1.4;
+  padding: 10px;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s;
+  z-index: 1000;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  max-width: 260px;
+}
+
+/* ── Mobile ──────────────────────────────────────────────── */
+
+@media screen and (max-width: 768px) {
+  .container-scenario-1,
+  .container-scenario-2,
+  .container-scenario-3,
+  .container-scenario-4,
+  .container-scenario-5 {
+    flex-direction: column;
+  }
+
+  .scroll-content-scenario-1,
+  .scroll-content-scenario-2,
+  .scroll-content-scenario-3,
+  .scroll-content-scenario-4,
+  .scroll-content-scenario-5 {
+    width: 100%;
+    padding-right: 15px;
+    padding-left:  15px;
+  }
+
+  .sticky-container {
+    width: 100%;
+    height: 50vh;
+    top: 25vh;
+  }
+
+  .card { margin-bottom: 60vh; }
+}
+
+@media screen and (max-width: 480px) {
+  .sticky-container { height: 40vh; top: 30vh; }
+  .card { margin-bottom: 50vh; padding: 15px; }
+}

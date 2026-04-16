@@ -1,0 +1,24 @@
+fuel,name,value,scenario,dots,step,filename
+Gas (pipeline),Supply Shock,0.3177017168104395,5,48,1,scenario 5 step 1.csv
+Gas (pipeline excluding NO and UK),Supply Shock,0.1024864024145755,5,15,1,scenario 5 step 1.csv
+Gas (LNG),Supply Shock,0.3667292628396162,5,55,1,scenario 5 step 1.csv
+Oil and petroleum products,Supply Shock,0.4755489178016503,5,71,1,scenario 5 step 1.csv
+Coal,Supply Shock,0.04859275228842638,5,7,1,scenario 5 step 1.csv
+Uranium (Average),Supply Shock,0.076516783,5,11,1,scenario 5 step 1.csv
+Onshore Wind,Supply Shock,0.003984922930982822,5,1,1,scenario 5 step 1.csv
+Offshore Wind,Supply Shock,0.01149612165342757,5,2,1,scenario 5 step 1.csv
+Solar,Supply Shock,0.006029742988962439,5,1,1,scenario 5 step 1.csv
+Gas (pipeline),Storage loss addition,4.512580208123429,5,677,2,scenario 5 step 2.csv
+Gas (pipeline excluding NO and UK),Storage loss addition,1.52879469667733,5,229,2,scenario 5 step 2.csv
+Gas (LNG),Storage loss addition,5.654513409296142,5,848,2,scenario 5 step 2.csv
+Coal,Storage loss addition,0.1950732258226046,5,29,2,scenario 5 step 2.csv
+Gas (pipeline),Price Shock + Minerals,0.34974,5,52,3,scenario 5 step 3.csv
+Gas (pipeline excluding NO and UK),Price Shock + Minerals,0.34974,5,52,3,scenario 5 step 3.csv
+Gas (LNG),Price Shock + Minerals,0.31356,5,47,3,scenario 5 step 3.csv
+Oil and petroleum products,Price Shock + Minerals,0.351436,5,53,3,scenario 5 step 3.csv
+Coal,Price Shock + Minerals,0.043804,5,7,3,scenario 5 step 3.csv
+Uranium (Average),Price Shock + Minerals,0.082656,5,12,3,scenario 5 step 3.csv
+Hydro,Price Shock + Minerals,0.012528,5,2,3,scenario 5 step 3.csv
+Onshore Wind,Price Shock + Minerals,0.0250096,5,4,3,scenario 5 step 3.csv
+Offshore Wind,Price Shock + Minerals,0.0250096,5,4,3,scenario 5 step 3.csv
+Solar,Price Shock + Minerals,0.011985,5,2,3,scenario 5 step 3.csv

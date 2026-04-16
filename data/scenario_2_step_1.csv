@@ -1,0 +1,7 @@
+fuel,name,value,scenario,dots,step,filename
+Gas (pipeline),Supply Shock,0.2269267334690611,2,34,1,scenario 2 step 1.csv
+Gas (pipeline excluding NO and UK),Supply Shock,0.07334856835441181,2,11,1,scenario 2 step 1.csv
+Gas (LNG),Supply Shock,0.2579766472599245,2,39,1,scenario 2 step 1.csv
+Oil and petroleum products,Supply Shock,0.3260983992622091,2,49,1,scenario 2 step 1.csv
+Coal,Supply Shock,0.0310822,2,5,1,scenario 2 step 1.csv
+Uranium (AVERAGE),Supply Shock,0.0495998910427699,2,7,1,scenario 2 step 1.csv

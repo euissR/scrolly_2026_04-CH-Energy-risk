@@ -1,0 +1,6 @@
+fuel,name,value,scenario,dots,step,filename
+Oil and petroleum products,Cost increase,0.009904065658594863,3,1,1,scenario 3 step 1.csv
+Uranium (AVERAGE),Cost increase,0.00370240198701918,3,1,1,scenario 3 step 1.csv
+Onshore Wind,Cost increase,0.0034322141204555048,3,1,1,scenario 3 step 1.csv
+Offshore Wind,Cost increase,0.009901609580097169,3,1,1,scenario 3 step 1.csv
+Solar,Cost increase,0.004151478047900639,3,1,1,scenario 3 step 1.csv
