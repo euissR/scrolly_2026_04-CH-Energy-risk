@@ -452,7 +452,7 @@ export class EnergyRiskChart {
       .transition()
       .duration(800)
       .style("opacity", 1)
-      .tween("text", () => (t) => vn.text(interp(t).toFixed(1)));
+      .tween("text", () => (t) => vn.text(interp(t).toFixed(2)));
 
     // 3. Build lookup of previous normalized polygons (for UPDATE morph)
     const prevMap = new Map();
@@ -536,7 +536,75 @@ export class EnergyRiskChart {
           );
       });
 
+    // Particle burst for newly entering cells
+    const newCells = validCells.filter((c) => c.step === step);
+    if (newCells.length) this._burstParticles(newCells, radius);
+
     this.prevCells = cells;
+  }
+
+  // ── Particle burst ────────────────────────────────────────────────────────
+
+  _burstParticles(newCells, targetRadius) {
+    const N_PER_CELL = 10; // particles per new cell — keep low for perf
+    const DURATION = 700; // ms flight time
+    const MARGIN = 60; // px beyond SVG edge for spawn point
+
+    // Build a weighted color palette from the incoming cells
+    const palette = newCells.map((c) => FUEL_COLORS[c.fuel] || "#aaa");
+
+    const W = this.width,
+      H = this.height;
+    const cx = this.cx,
+      cy = this.cy;
+
+    // Generate spawn points randomly along all four outer edges
+    function spawnPoint() {
+      const edge = Math.floor(Math.random() * 4);
+      switch (edge) {
+        case 0:
+          return [-MARGIN, Math.random() * H]; // left
+        case 1:
+          return [W + MARGIN, Math.random() * H]; // right
+        case 2:
+          return [Math.random() * W, -MARGIN]; // top
+        default:
+          return [Math.random() * W, H + MARGIN]; // bottom
+      }
+    }
+
+    const total = newCells.length * N_PER_CELL;
+    const data = Array.from({ length: total }, (_, i) => {
+      const [sx, sy] = spawnPoint();
+      // Land inside a small jitter radius around the circle centre
+      const jitter = targetRadius * 0.35;
+      const angle = Math.random() * 2 * Math.PI;
+      const tx = cx + Math.cos(angle) * Math.random() * jitter;
+      const ty = cy + Math.sin(angle) * Math.random() * jitter;
+      return { sx, sy, tx, ty, color: palette[i % palette.length] };
+    });
+
+    const g = this.particlesGroup;
+
+    data.forEach((d) => {
+      const dot = g
+        .append("circle")
+        .attr("r", 2)
+        .attr("cx", d.sx)
+        .attr("cy", d.sy)
+        .attr("fill", d.color)
+        .style("opacity", 0.9)
+        .style("pointer-events", "none");
+
+      dot
+        .transition()
+        .duration(DURATION + Math.random() * 200) // slight stagger
+        .ease((t) => t * t) // ease-in (accelerate in)
+        .attr("cx", d.tx)
+        .attr("cy", d.ty)
+        .style("opacity", 0)
+        .remove();
+    });
   }
 
   // ── Resize ────────────────────────────────────────────────────────────────
