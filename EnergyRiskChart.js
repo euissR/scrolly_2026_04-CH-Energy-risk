@@ -2,20 +2,20 @@ import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7.8.5/+esm";
 
 // ─── Fuel → color mapping (fossil → renewable) ───────────────────────────────
 export const FUEL_COLORS = {
-  "Coal":                               "#33163A",
-  "Gas (pipeline)":                     "#343151",
+  Coal: "#33163A",
+  "Gas (pipeline)": "#343151",
   "Gas (pipeline excluding NO and UK)": "#354C69",
-  "Gas (LNG)":                          "#376882",
-  "Oil and petroleum products":         "#468699",
-  "Uranium (AVERAGE)":                  "#55A4B0",
-  "Hydro":                              "#64C2C7",
-  "Onshore Wind":                       "#97CBAB",
-  "Offshore Wind":                      "#CBD490",
-  "Solar":                              "#FFDE75",
+  "Gas (LNG)": "#376882",
+  "Oil and petroleum products": "#468699",
+  "Uranium (AVERAGE)": "#55A4B0",
+  Hydro: "#64C2C7",
+  "Onshore Wind": "#97CBAB",
+  "Offshore Wind": "#CBD490",
+  Solar: "#FFDE75",
 };
 
-const NORM_N      = 64;   // polygon vertex count for animation interpolation
-const WCVT_ITERS  = 50;   // Lloyd's relaxation iterations
+const NORM_N = 64; // polygon vertex count for animation interpolation
+const WCVT_ITERS = 50; // Lloyd's relaxation iterations
 const MIN_LABEL_AREA = 1800; // px² threshold to render a risk-type label
 
 // ─── Geometry helpers ─────────────────────────────────────────────────────────
@@ -37,11 +37,14 @@ function isInside([px, py], [ax, ay], [bx, by]) {
 }
 
 function edgeIntersect([ax, ay], [bx, by], [cx, cy], [dx, dy]) {
-  const a1 = by - ay, b1 = ax - bx;
-  const a2 = dy - cy, b2 = cx - dx;
+  const a1 = by - ay,
+    b1 = ax - bx;
+  const a2 = dy - cy,
+    b2 = cx - dx;
   const det = a1 * b2 - a2 * b1;
   if (Math.abs(det) < 1e-12) return [(ax + bx) / 2, (ay + by) / 2];
-  const c1 = a1 * ax + b1 * ay, c2 = a2 * cx + b2 * cy;
+  const c1 = a1 * ax + b1 * ay,
+    c2 = a2 * cx + b2 * cy;
   return [(c1 * b2 - c2 * b1) / det, (a1 * c2 - a2 * c1) / det];
 }
 
@@ -50,11 +53,15 @@ function clipToConvex(subj, clip) {
   let out = subj.slice();
   for (let i = 0, n = clip.length; i < n; i++) {
     if (!out.length) return [];
-    const inp = out.slice(); out = [];
-    const A = clip[i], B = clip[(i + 1) % n];
+    const inp = out.slice();
+    out = [];
+    const A = clip[i],
+      B = clip[(i + 1) % n];
     for (let j = 0, m = inp.length; j < m; j++) {
-      const cur = inp[j], prev = inp[(j + m - 1) % m];
-      const curIn = isInside(cur, A, B), prevIn = isInside(prev, A, B);
+      const cur = inp[j],
+        prev = inp[(j + m - 1) % m];
+      const curIn = isInside(cur, A, B),
+        prevIn = isInside(prev, A, B);
       if (curIn) {
         if (!prevIn) out.push(edgeIntersect(prev, cur, A, B));
         out.push(cur);
@@ -67,7 +74,8 @@ function clipToConvex(subj, clip) {
 }
 
 function polyArea(pts) {
-  let s = 0, n = pts.length;
+  let s = 0,
+    n = pts.length;
   for (let i = 0, j = n - 1; i < n; j = i++) {
     s += (pts[j][0] + pts[i][0]) * (pts[j][1] - pts[i][1]);
   }
@@ -75,7 +83,10 @@ function polyArea(pts) {
 }
 
 function polyCentroid(pts) {
-  let ax = 0, ay = 0, area = 0, n = pts.length;
+  let ax = 0,
+    ay = 0,
+    area = 0,
+    n = pts.length;
   for (let i = 0, j = n - 1; i < n; j = i++) {
     const cross = pts[j][0] * pts[i][1] - pts[i][0] * pts[j][1];
     area += cross;
@@ -84,7 +95,10 @@ function polyCentroid(pts) {
   }
   area /= 2;
   if (Math.abs(area) < 1e-10)
-    return [pts.reduce((s, p) => s + p[0], 0) / n, pts.reduce((s, p) => s + p[1], 0) / n];
+    return [
+      pts.reduce((s, p) => s + p[0], 0) / n,
+      pts.reduce((s, p) => s + p[1], 0) / n,
+    ];
   return [ax / (6 * area), ay / (6 * area)];
 }
 
@@ -107,21 +121,28 @@ function normalizePoly(poly, n = NORM_N) {
   const res = [];
   for (let k = 0; k < n; k++) {
     const t = (k / n) * total;
-    let lo = 0, hi = M - 1;
+    let lo = 0,
+      hi = M - 1;
     while (lo < hi) {
       const mid = (lo + hi + 1) >> 1;
-      if (cum[mid] <= t) lo = mid; else hi = mid - 1;
+      if (cum[mid] <= t) lo = mid;
+      else hi = mid - 1;
     }
     const dt = cum[lo + 1] - cum[lo];
     const f = dt < 1e-10 ? 0 : (t - cum[lo]) / dt;
-    const a = poly[lo], b = poly[(lo + 1) % M];
+    const a = poly[lo],
+      b = poly[(lo + 1) % M];
     res.push([a[0] + f * (b[0] - a[0]), a[1] + f * (b[1] - a[1])]);
   }
   return res;
 }
 
 function pathFromNormed(pts) {
-  return "M" + pts.map(p => `${p[0].toFixed(1)},${p[1].toFixed(1)}`).join("L") + "Z";
+  return (
+    "M" +
+    pts.map((p) => `${p[0].toFixed(1)},${p[1].toFixed(1)}`).join("L") +
+    "Z"
+  );
 }
 
 // ─── Weighted CVT (approximate voronoi treemap) ───────────────────────────────
@@ -154,9 +175,14 @@ function computeWCVT(data, cx, cy, radius) {
     return [{ ...data[0], polygon: poly, normedPoly: normalizePoly(poly) }];
   }
 
-  const total    = data.reduce((s, d) => s + d.value, 0);
-  const clip     = circleClipPoly(cx, cy, radius, 72);
-  const bounds   = [cx - radius - 1, cy - radius - 1, cx + radius + 1, cy + radius + 1];
+  const total = data.reduce((s, d) => s + d.value, 0);
+  const clip = circleClipPoly(cx, cy, radius, 72);
+  const bounds = [
+    cx - radius - 1,
+    cy - radius - 1,
+    cx + radius + 1,
+    cy + radius + 1,
+  ];
   const circArea = Math.PI * radius * radius;
 
   let sites = initSites(data, cx, cy, radius);
@@ -166,12 +192,12 @@ function computeWCVT(data, cx, cy, radius) {
     const vor = del.voronoi(bounds);
 
     sites = sites.map((s, i) => {
-      const raw  = vor.cellPolygon(i);
+      const raw = vor.cellPolygon(i);
       if (!raw) return s;
       const cell = clipToConvex(Array.from(raw), clip);
       if (cell.length < 3) return s;
 
-      const area   = polyArea(cell);
+      const area = polyArea(cell);
       const target = (data[i].value / total) * circArea;
       const [gx, gy] = polyCentroid(cell);
 
@@ -184,7 +210,8 @@ function computeWCVT(data, cx, cy, radius) {
       if (area > 1e-6) {
         const ratio = target / area; // >1 means cell too small, <1 too large
         const correction = (ratio - 1) * 0.18;
-        const dx = s[0] - cx, dy = s[1] - cy;
+        const dx = s[0] - cx,
+          dy = s[1] - cy;
         const dist = Math.sqrt(dx * dx + dy * dy);
         if (dist > 1e-6) {
           // Move toward/away from center to claim/yield area
@@ -194,8 +221,9 @@ function computeWCVT(data, cx, cy, radius) {
       }
 
       // Clamp within circle
-      const ddx = nx - cx, ddy = ny - cy;
-      const d2  = Math.sqrt(ddx * ddx + ddy * ddy);
+      const ddx = nx - cx,
+        ddy = ny - cy;
+      const d2 = Math.sqrt(ddx * ddx + ddy * ddy);
       if (d2 > radius * 0.96) {
         const sc = (radius * 0.96) / d2;
         return [cx + ddx * sc, cy + ddy * sc];
@@ -209,13 +237,13 @@ function computeWCVT(data, cx, cy, radius) {
   const vor = del.voronoi(bounds);
 
   return data.map((d, i) => {
-    const raw  = vor.cellPolygon(i);
+    const raw = vor.cellPolygon(i);
     const poly = raw ? clipToConvex(Array.from(raw), clip) : null;
     return {
       ...d,
-      polygon:   poly,
+      polygon: poly,
       normedPoly: poly ? normalizePoly(poly) : null,
-      site:      sites[i],
+      site: sites[i],
     };
   });
 }
@@ -230,36 +258,40 @@ export class EnergyRiskChart {
    * @param {number}   globalMaxCumulative - max value_scenario across all scenarios (for scale)
    */
   constructor(container, scenarioNum, allData, globalMaxCumulative) {
-    this.container            = container;
-    this.scenarioNum          = scenarioNum;
-    this.globalMaxCumulative  = globalMaxCumulative;
-    this.currentStep          = 0;
-    this.layouts              = {};   // { step → { cells, radius, cumVal } }
-    this.prevCells            = null; // for polygon morph start
+    this.container = container;
+    this.scenarioNum = scenarioNum;
+    this.globalMaxCumulative = globalMaxCumulative;
+    this.currentStep = 0;
+    this.layouts = {}; // { step → { cells, radius, cumVal } }
+    this.prevCells = null; // for polygon morph start
 
-    this.scenarioData = allData.filter(d => d.scenario === scenarioNum);
-    this.maxStep      = d3.max(this.scenarioData, d => d.step) || 1;
+    this.scenarioData = allData.filter((d) => d.scenario === scenarioNum);
+    this.maxStep = d3.max(this.scenarioData, (d) => d.step) || 1;
 
-    const rect      = container.getBoundingClientRect();
-    this.width      = rect.width  || 600;
-    this.height     = Math.min(this.width * 0.88, window.innerHeight * 0.88);
-    this.cx         = this.width  / 2;
-    this.cy         = this.height / 2;
-    this.maxRadius  = Math.min(this.width, this.height) * 0.40;
-    this.minRadius  = this.maxRadius * 0.10; // keeps tiny scenarios visible
+    const rect = container.getBoundingClientRect();
+    this.width = rect.width || 600;
+    this.height = Math.min(this.width * 0.88, window.innerHeight * 0.88);
+    this.cx = this.width / 2;
+    this.cy = this.height / 2;
+    this.maxRadius = Math.min(this.width, this.height) * 0.4;
+    this.minRadius = this.maxRadius * 0.1; // keeps tiny scenarios visible
 
     this._init();
   }
 
   // ── Data helpers ──────────────────────────────────────────────────────────
 
-  _stepData(step)  { return this.scenarioData.filter(d => d.step <= step); }
-  _cumVal(step)    { return this._stepData(step).reduce((s, d) => s + d.value, 0); }
-  _radius(cumVal)  {
+  _stepData(step) {
+    return this.scenarioData.filter((d) => d.step <= step);
+  }
+  _cumVal(step) {
+    return this._stepData(step).reduce((s, d) => s + d.value, 0);
+  }
+  _radius(cumVal) {
     if (!this.globalMaxCumulative) return this.maxRadius;
     return Math.max(
       this.minRadius,
-      this.maxRadius * Math.sqrt(cumVal / this.globalMaxCumulative)
+      this.maxRadius * Math.sqrt(cumVal / this.globalMaxCumulative),
     );
   }
 
@@ -267,10 +299,10 @@ export class EnergyRiskChart {
 
   _precompute() {
     for (let step = 1; step <= this.maxStep; step++) {
-      const data   = this._stepData(step);
+      const data = this._stepData(step);
       const cumVal = this._cumVal(step);
       const radius = this._radius(cumVal);
-      const cells  = computeWCVT(data, this.cx, this.cy, radius);
+      const cells = computeWCVT(data, this.cx, this.cy, radius);
       this.layouts[step] = { cells, radius, cumVal };
     }
   }
@@ -278,27 +310,47 @@ export class EnergyRiskChart {
   // ── Setup ─────────────────────────────────────────────────────────────────
 
   _init() {
-    this.svg = d3.select(this.container)
+    this.svg = d3
+      .select(this.container)
       .append("svg")
-      .attr("width",  this.width)
+      .attr("width", this.width)
       .attr("height", this.height)
-      .attr("class",  "energy-risk-svg");
+      .attr("class", "energy-risk-svg");
 
     // Dashed reference circle (shows current scale)
-    this.circleBorder = this.svg.append("circle")
-      .attr("cx", this.cx).attr("cy", this.cy).attr("r", 0)
+    this.circleBorder = this.svg
+      .append("circle")
+      .attr("cx", this.cx)
+      .attr("cy", this.cy)
+      .attr("r", 0)
       .attr("fill", "none")
       .attr("stroke", "#bbb")
       .attr("stroke-width", 1)
       .attr("stroke-dasharray", "4 3");
 
-    // Cumulative risk readout
-    this.valueText = this.svg.append("text")
-      .attr("x", this.cx).attr("y", this.height - 16)
+    // Cumulative risk readout — static label + large animated number
+    this.valueLabel = this.svg
+      .append("text")
+      .attr("x", this.cx)
+      .attr("y", this.height - 36)
       .attr("text-anchor", "middle")
-      .style("font-size", "12px").style("fill", "#666").style("opacity", 0);
+      .style("font-size", "12px")
+      .style("fill", "#666")
+      .style("font-weight", "400")
+      .style("opacity", 0)
+      .text("Cumulative risk index");
 
-    this.cellsGroup  = this.svg.append("g").attr("class", "wcvt-cells");
+    this.valueNumber = this.svg
+      .append("text")
+      .attr("x", this.cx)
+      .attr("y", this.height - 8)
+      .attr("text-anchor", "middle")
+      .style("font-size", "36px")
+      .style("fill", "#333")
+      .style("font-weight", "700")
+      .style("opacity", 0);
+
+    this.cellsGroup = this.svg.append("g").attr("class", "wcvt-cells");
     this.labelsGroup = this.svg.append("g").attr("class", "wcvt-labels");
 
     this._precompute();
@@ -307,17 +359,60 @@ export class EnergyRiskChart {
   }
 
   _setupLegend() {
-    const fuels = [...new Set(this.scenarioData.map(d => d.fuel))];
-    const g = this.svg.append("g").attr("class", "risk-legend");
+    const fuels = [...new Set(this.scenarioData.map((d) => d.fuel))];
+    const ROW_H = 18;
+    const DOT_W = 10;
+    const MARGIN = 14; // px from right edge to dot right edge
+    const totalH = fuels.length * ROW_H;
+    const startY = (this.height - totalH) / 2;
+    const dotX = this.width - MARGIN - DOT_W; // left edge of dot rect
+
+    this.legendGroup = this.svg.append("g").attr("class", "risk-legend");
+
     fuels.forEach((fuel, i) => {
-      const row = g.append("g").attr("transform", `translate(12,${12 + i * 18})`);
-      row.append("rect")
-        .attr("width", 10).attr("height", 10).attr("rx", 2)
+      const y = startY + i * ROW_H;
+      const row = this.legendGroup
+        .append("g")
+        .attr("transform", `translate(0,${y})`);
+
+      // Dot at right margin
+      row
+        .append("rect")
+        .attr("x", dotX)
+        .attr("y", 0)
+        .attr("width", DOT_W)
+        .attr("height", DOT_W)
+        .attr("rx", 2)
         .attr("fill", FUEL_COLORS[fuel] || "#aaa");
-      row.append("text")
-        .attr("x", 15).attr("y", 9)
-        .style("font-size", "10px").style("fill", "#444")
+
+      // Label right-aligned to the left of the dot
+      row
+        .append("text")
+        .attr("x", dotX - 5)
+        .attr("y", 9)
+        .attr("text-anchor", "end")
+        .style("font-size", "10px")
+        .style("fill", "#444")
         .text(fuel);
+    });
+  }
+
+  _updateLegendPosition() {
+    if (!this.legendGroup) return;
+    const fuels = [...new Set(this.scenarioData.map((d) => d.fuel))];
+    const ROW_H = 18;
+    const DOT_W = 10;
+    const MARGIN = 14;
+    const totalH = fuels.length * ROW_H;
+    const startY = (this.height - totalH) / 2;
+    const dotX = this.width - MARGIN - DOT_W;
+
+    this.legendGroup.selectAll("g").each(function (_, i) {
+      d3.select(this).attr("transform", `translate(0,${startY + i * ROW_H})`);
+      d3.select(this).select("rect").attr("x", dotX);
+      d3.select(this)
+        .select("text")
+        .attr("x", dotX - 5);
     });
   }
 
@@ -325,7 +420,9 @@ export class EnergyRiskChart {
     // Reuse a shared tooltip if present, otherwise create one
     this.tooltip = d3.select("body").select(".risk-tooltip");
     if (this.tooltip.empty()) {
-      this.tooltip = d3.select("body").append("div")
+      this.tooltip = d3
+        .select("body")
+        .append("div")
         .attr("class", "risk-tooltip tooltip")
         .style("opacity", 0);
     }
@@ -341,137 +438,123 @@ export class EnergyRiskChart {
 
     // 1. Animate reference circle
     this.circleBorder
-      .transition().duration(800).ease(d3.easeCubicOut)
+      .transition()
+      .duration(800)
+      .ease(d3.easeCubicOut)
       .attr("r", radius);
 
     // 2. Animate risk readout
-    const prevVal = step > 1 ? (this.layouts[step - 1]?.cumVal || 0) : 0;
-    const interp  = d3.interpolateNumber(prevVal, cumVal);
-    const vt      = this.valueText;
-    this.valueText
-      .transition().duration(800)
+    const prevVal = step > 1 ? this.layouts[step - 1]?.cumVal || 0 : 0;
+    const interp = d3.interpolateNumber(prevVal, cumVal);
+    const vn = this.valueNumber;
+    this.valueLabel.transition().duration(400).style("opacity", 1);
+    this.valueNumber
+      .transition()
+      .duration(800)
       .style("opacity", 1)
-      .tween("text", () => t => vt.text(`Cumulative risk index: ${interp(t).toFixed(3)}`));
+      .tween("text", () => (t) => vn.text(interp(t).toFixed(3)));
 
     // 3. Build lookup of previous normalized polygons (for UPDATE morph)
     const prevMap = new Map();
     if (this.prevCells) {
-      this.prevCells.forEach(c => {
+      this.prevCells.forEach((c) => {
         prevMap.set(`${c.fuel}|${c.name}|${c.step}`, c.normedPoly);
       });
     }
 
-    const validCells = cells.filter(c => c.polygon && c.polygon.length >= 3);
+    const validCells = cells.filter((c) => c.polygon && c.polygon.length >= 3);
     const centerPoly = Array.from({ length: NORM_N }, () => [this.cx, this.cy]);
 
-    const sel = this.cellsGroup.selectAll(".risk-cell")
-      .data(validCells, d => `${d.fuel}|${d.name}|${d.step}`);
+    const sel = this.cellsGroup
+      .selectAll(".risk-cell")
+      .data(validCells, (d) => `${d.fuel}|${d.name}|${d.step}`);
 
     // ENTER — new cells fly in from center
-    sel.enter()
+    sel
+      .enter()
       .append("path")
       .attr("class", "risk-cell")
-      .attr("fill",         d => FUEL_COLORS[d.fuel] || "#aaa")
-      .attr("stroke",       "#fff")
+      .attr("fill", (d) => FUEL_COLORS[d.fuel] || "#aaa")
+      .attr("stroke", "#fff")
       .attr("stroke-width", 0.8)
       .style("opacity", 0)
       .attr("d", pathFromNormed(centerPoly))
       .on("mouseover", (event, d) => {
-        this.tooltip.style("opacity", 1)
-          .html(`<strong>${d.fuel}</strong><br/>${d.name}: ${d.value.toFixed(4)}`);
-      })
-      .on("mousemove", event => {
         this.tooltip
-          .style("left", (event.pageX + 12) + "px")
-          .style("top",  (event.pageY - 10) + "px");
+          .style("opacity", 1)
+          .html(
+            `<strong>${d.fuel}</strong><br/>${d.name}: ${d.value.toFixed(4)}`,
+          );
+      })
+      .on("mousemove", (event) => {
+        this.tooltip
+          .style("left", event.pageX + 12 + "px")
+          .style("top", event.pageY - 10 + "px");
       })
       .on("mouseout", () => this.tooltip.style("opacity", 0))
-      .transition().duration(900).ease(d3.easeCubicOut)
-      .style("opacity", d => d.step === step ? 1 : 0.33)
-      .attrTween("d", d => {
+      .transition()
+      .duration(900)
+      .ease(d3.easeCubicOut)
+      .style("opacity", (d) => (d.step === step ? 1 : 0.33))
+      .attrTween("d", (d) => {
         const target = d.normedPoly || normalizePoly(d.polygon, NORM_N);
-        return t => pathFromNormed(
-          centerPoly.map((s, i) => [
-            s[0] + t * (target[i][0] - s[0]),
-            s[1] + t * (target[i][1] - s[1]),
-          ])
-        );
+        return (t) =>
+          pathFromNormed(
+            centerPoly.map((s, i) => [
+              s[0] + t * (target[i][0] - s[0]),
+              s[1] + t * (target[i][1] - s[1]),
+            ]),
+          );
       });
 
     // EXIT — cells that no longer belong in this step (e.g. on backscroll)
-    sel.exit()
-      .transition().duration(500).ease(d3.easeCubicIn)
+    sel
+      .exit()
+      .transition()
+      .duration(500)
+      .ease(d3.easeCubicIn)
       .style("opacity", 0)
       .remove();
 
     // UPDATE — existing cells morph to their new voronoi positions
-    sel.transition().duration(900).ease(d3.easeCubicInOut)
-      .style("opacity", d => d.step === step ? 1 : 0.33)
-      .attrTween("d", d => {
-        const key   = `${d.fuel}|${d.name}|${d.step}`;
+    sel
+      .transition()
+      .duration(900)
+      .ease(d3.easeCubicInOut)
+      .style("opacity", (d) => (d.step === step ? 1 : 0.33))
+      .attrTween("d", (d) => {
+        const key = `${d.fuel}|${d.name}|${d.step}`;
         const start = prevMap.get(key) || normalizePoly(d.polygon, NORM_N);
-        const end   = d.normedPoly || normalizePoly(d.polygon, NORM_N);
+        const end = d.normedPoly || normalizePoly(d.polygon, NORM_N);
         if (!start || !end) return () => "";
-        return t => pathFromNormed(
-          start.map((s, i) => [
-            s[0] + t * (end[i][0] - s[0]),
-            s[1] + t * (end[i][1] - s[1]),
-          ])
-        );
+        return (t) =>
+          pathFromNormed(
+            start.map((s, i) => [
+              s[0] + t * (end[i][0] - s[0]),
+              s[1] + t * (end[i][1] - s[1]),
+            ]),
+          );
       });
 
-    // 4. Labels
-    this._updateLabels(validCells, step);
     this.prevCells = cells;
-  }
-
-  _updateLabels(cells, step) {
-    // Only label cells introduced in the current step with enough area
-    const labelData = cells.filter(c =>
-      c.step === step &&
-      c.polygon && c.polygon.length >= 3 &&
-      polyArea(c.polygon) > MIN_LABEL_AREA
-    );
-
-    const sel = this.labelsGroup.selectAll(".risk-label")
-      .data(labelData, d => `${d.fuel}|${d.name}|${d.step}`);
-
-    sel.exit().transition().duration(300).style("opacity", 0).remove();
-
-    sel.enter().append("text")
-      .attr("class", "risk-label")
-      .style("opacity", 0)
-      .style("pointer-events", "none")
-      .attr("text-anchor",       "middle")
-      .attr("dominant-baseline", "middle")
-      .style("font-size",   "10px")
-      .style("font-weight", "600")
-      .style("paint-order", "stroke")
-      .style("stroke",       "rgba(255,255,255,0.55)")
-      .style("stroke-width", "3px")
-      .style("fill", d => _textColor(FUEL_COLORS[d.fuel] || "#aaa"))
-      .merge(sel)
-      .attr("x", d => polyCentroid(d.polygon)[0])
-      .attr("y", d => polyCentroid(d.polygon)[1])
-      .text(d => d.name)
-      .transition().duration(600).delay(350)
-      .style("opacity", 1);
   }
 
   // ── Resize ────────────────────────────────────────────────────────────────
 
   resize() {
-    const rect  = this.container.getBoundingClientRect();
-    this.width  = rect.width || 600;
+    const rect = this.container.getBoundingClientRect();
+    this.width = rect.width || 600;
     this.height = Math.min(this.width * 0.88, window.innerHeight * 0.88);
-    this.cx     = this.width  / 2;
-    this.cy     = this.height / 2;
-    this.maxRadius = Math.min(this.width, this.height) * 0.40;
-    this.minRadius = this.maxRadius * 0.10;
+    this.cx = this.width / 2;
+    this.cy = this.height / 2;
+    this.maxRadius = Math.min(this.width, this.height) * 0.4;
+    this.minRadius = this.maxRadius * 0.1;
 
     this.svg.attr("width", this.width).attr("height", this.height);
     this.circleBorder.attr("cx", this.cx).attr("cy", this.cy);
-    this.valueText.attr("x", this.cx).attr("y", this.height - 16);
+    this.valueLabel.attr("x", this.cx).attr("y", this.height - 36);
+    this.valueNumber.attr("x", this.cx).attr("y", this.height - 8);
+    this._updateLegendPosition();
 
     this.layouts = {};
     this._precompute();
