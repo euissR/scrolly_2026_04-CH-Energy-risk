@@ -547,7 +547,7 @@ export class EnergyRiskChart {
   // ── Particle burst ────────────────────────────────────────────────────────
 
   _burstParticles(newCells, targetRadius) {
-    const N_PER_CELL = 10; // particles per new cell — keep low for perf
+    const N_PER_CELL = 200; // particles per new cell — keep low for perf
     const DURATION = 700; // ms flight time
     const MARGIN = 60; // px beyond SVG edge for spawn point
 
