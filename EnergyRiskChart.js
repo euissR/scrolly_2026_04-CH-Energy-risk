@@ -437,7 +437,7 @@ export class EnergyRiskChart {
     this.currentStep = step;
     const { cells, radius, cumVal } = layout;
     // Delay treemap growth until particles have mostly landed
-    const CELL_DELAY = 1200; // ms — matches ~particle flight time
+    const CELL_DELAY = 900; // ms — matches ~particle flight time
 
     // 1. Animate reference circle
     this.circleBorder
@@ -506,7 +506,7 @@ export class EnergyRiskChart {
       .delay(CELL_DELAY)
       .duration(900)
       .ease(d3.easeCubicOut)
-      .style("opacity", (d) => (d.step === step ? 1 : 0.33))
+      .style("opacity", (d) => (d.step === step ? 1 : 0.5))
       .attrTween("d", (d) => {
         const target = d.normedPoly || normalizePoly(d.polygon, NORM_N);
         return (t) =>
@@ -561,7 +561,7 @@ export class EnergyRiskChart {
   _burstParticles(newCells, targetRadius) {
     const N_PER_CELL = 50; // particles per new cell — keep low for perf
     const DURATION = 1000; // ms flight time
-    const MARGIN = 500; // px beyond SVG edge for spawn point
+    const MARGIN = 100; // px beyond SVG edge for spawn point
 
     // Build a weighted color palette from the incoming cells
     const palette = newCells.map((c) => FUEL_COLORS[c.fuel] || "#aaa");
@@ -593,15 +593,18 @@ export class EnergyRiskChart {
         Math.round((c.value / totalValue) * N_PER_CELL * newCells.length),
       );
       const color = FUEL_COLORS[c.fuel] || "#aaa";
+      // Target: cell's voronoi centroid ± small jitter
+      const [pcx, pcy] = c.polygon ? polyCentroid(c.polygon) : [cx, cy];
+      const jitter = targetRadius * 0.12;
       return Array.from({ length: count }, () => {
         const [sx, sy] = spawnPoint();
-        const jitter = targetRadius * 0.35;
         const angle = Math.random() * 2 * Math.PI;
+        const r = Math.random() * jitter;
         return {
           sx,
           sy,
-          tx: cx + Math.cos(angle) * Math.random() * jitter,
-          ty: cy + Math.sin(angle) * Math.random() * jitter,
+          tx: pcx + Math.cos(angle) * r,
+          ty: pcy + Math.sin(angle) * r,
           color,
         };
       });
@@ -616,7 +619,7 @@ export class EnergyRiskChart {
         .attr("cx", d.sx)
         .attr("cy", d.sy)
         .attr("fill", d.color)
-        .style("opacity", 0.9)
+        .style("opacity", 1)
         .style("pointer-events", "none");
 
       dot
