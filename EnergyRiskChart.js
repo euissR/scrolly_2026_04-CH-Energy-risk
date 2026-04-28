@@ -350,6 +350,7 @@ export class EnergyRiskChart {
       .style("font-weight", "700")
       .style("opacity", 0);
 
+    this.particlesGroup = this.svg.append("g").attr("class", "wcvt-particles");
     this.cellsGroup = this.svg.append("g").attr("class", "wcvt-cells");
     this.labelsGroup = this.svg.append("g").attr("class", "wcvt-labels");
 
