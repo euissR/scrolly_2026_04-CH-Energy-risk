@@ -559,9 +559,9 @@ export class EnergyRiskChart {
   // ── Particle burst ────────────────────────────────────────────────────────
 
   _burstParticles(newCells, targetRadius) {
-    const N_PER_CELL = 100; // particles per new cell — keep low for perf
+    const N_PER_CELL = 50; // particles per new cell — keep low for perf
     const DURATION = 1000; // ms flight time
-    const MARGIN = 0; // px beyond SVG edge for spawn point
+    const MARGIN = 500; // px beyond SVG edge for spawn point
 
     // Build a weighted color palette from the incoming cells
     const palette = newCells.map((c) => FUEL_COLORS[c.fuel] || "#aaa");
