@@ -452,7 +452,7 @@ export class EnergyRiskChart {
       .transition()
       .duration(800)
       .style("opacity", 1)
-      .tween("text", () => (t) => vn.text(interp(t).toFixed(3)));
+      .tween("text", () => (t) => vn.text(interp(t).toFixed(1)));
 
     // 3. Build lookup of previous normalized polygons (for UPDATE morph)
     const prevMap = new Map();
