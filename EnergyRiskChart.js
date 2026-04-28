@@ -437,7 +437,7 @@ export class EnergyRiskChart {
     this.currentStep = step;
     const { cells, radius, cumVal } = layout;
     // Delay treemap growth until particles have mostly landed
-    const CELL_DELAY = 700; // ms — matches ~particle flight time
+    const CELL_DELAY = 1200; // ms — matches ~particle flight time
 
     // 1. Animate reference circle
     this.circleBorder
@@ -559,7 +559,7 @@ export class EnergyRiskChart {
   // ── Particle burst ────────────────────────────────────────────────────────
 
   _burstParticles(newCells, targetRadius) {
-    const N_PER_CELL = 500; // particles per new cell — keep low for perf
+    const N_PER_CELL = 100; // particles per new cell — keep low for perf
     const DURATION = 1000; // ms flight time
     const MARGIN = 0; // px beyond SVG edge for spawn point
 
