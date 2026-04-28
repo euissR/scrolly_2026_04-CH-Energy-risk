@@ -440,6 +440,7 @@ export class EnergyRiskChart {
     // 1. Animate reference circle
     this.circleBorder
       .transition()
+      .delay(500)
       .duration(800)
       .ease(d3.easeCubicOut)
       .attr("r", radius);
