@@ -16,7 +16,6 @@ export const FUEL_COLORS = {
 
 const DOTS_PER_UNIT  = 40;   // particles per unit of risk value
 const MIN_DOTS       = 3;    // minimum new particles per step addition
-const WCVT_ITERS     = 150;
 const PARTICLE_R     = 3.75; // px
 const FLIGHT_DUR     = 900;  // ms — particle flight time
 const CELL_DELAY     = 650;  // ms — wait before circle/counter animate
@@ -123,77 +122,88 @@ function sampleInPolygon(polygon, n) {
 
 // ─── Weighted CVT ─────────────────────────────────────────────────────────────
 
-function initSites(data, cx, cy, radius) {
-  const total  = data.reduce((s, d) => s + d.value, 0);
-  const phi    = Math.PI * (3 - Math.sqrt(5));
-  // Sort descending so largest-weight cells start near the centre,
-  // which is a far better init for highly unequal weights.
-  const sorted = [...data].map((d, i) => ({ d, i }))
-                          .sort((a, b) => b.d.value - a.d.value);
-  const sites  = new Array(data.length);
-  let cum = 0;
-  sorted.forEach(({ d, i }, k) => {
-    cum += d.value / total;
-    const r = radius * 0.82 * Math.sqrt(Math.max(0, cum - d.value / total / 2));
-    sites[i] = [cx + r * Math.cos(k * phi), cy + r * Math.sin(k * phi)];
-  });
-  return sites;
+// ─── Exact-area recursive polygon partitioning ───────────────────────────────
+
+/** Clip convex polygon to the half-plane coord ≤ threshold (horiz) or coord ≥ (upper). */
+function clipToHalf(polygon, threshold, horizontal, keepLower) {
+  const out = [];
+  const n   = polygon.length;
+  for (let i = 0; i < n; i++) {
+    const cur  = polygon[i];
+    const next = polygon[(i + 1) % n];
+    const cv   = horizontal ? cur[1]  : cur[0];
+    const nv   = horizontal ? next[1] : next[0];
+    const cIn  = keepLower  ? cv <= threshold : cv >= threshold;
+    const nIn  = keepLower  ? nv <= threshold : nv >= threshold;
+    if (cIn) out.push(cur);
+    if (cIn !== nIn) {
+      const t = (threshold - cv) / (nv - cv);
+      out.push([cur[0] + t * (next[0] - cur[0]), cur[1] + t * (next[1] - cur[1])]);
+    }
+  }
+  return out;
 }
 
-function computeWCVT(data, cx, cy, radius) {
+/** Binary-search for the cut position that gives the left/upper polygon
+ *  exactly targetFraction of the input polygon's area. */
+function splitByFraction(polygon, targetFraction, horizontal) {
+  const totalArea  = polyArea(polygon);
+  const targetArea = totalArea * targetFraction;
+  const coords     = polygon.map(p => horizontal ? p[1] : p[0]);
+  let lo = Math.min(...coords), hi = Math.max(...coords);
+
+  let bestLeft = polygon, bestRight = polygon;
+  for (let it = 0; it < 64; it++) {
+    const mid   = (lo + hi) / 2;
+    const left  = clipToHalf(polygon, mid, horizontal, true);
+    const right = clipToHalf(polygon, mid, horizontal, false);
+    const lArea = left.length  >= 3 ? polyArea(left)  : 0;
+    if (lArea < targetArea) lo = mid; else hi = mid;
+    if (left.length  >= 3) bestLeft  = left;
+    if (right.length >= 3) bestRight = right;
+  }
+  return [bestLeft, bestRight];
+}
+
+/** Recursively partition a convex polygon into cells whose areas are
+ *  exactly proportional to data[i].value. Alternates H/V splits. */
+function partitionPolygon(polygon, data, depth = 0) {
+  if (!data.length) return [];
+  if (data.length === 1) return [{ ...data[0], polygon }];
+
+  const total = data.reduce((s, d) => s + d.value, 0);
+
+  // Find the split index closest to 50/50 by cumulative weight
+  let cum = 0, splitIdx = 1;
+  for (let i = 0; i < data.length - 1; i++) {
+    const next = cum + data[i].value / total;
+    // Take whichever split point is closer to 0.5
+    if (Math.abs(next - 0.5) < Math.abs(cum - 0.5)) splitIdx = i + 1;
+    cum = next;
+    if (cum >= 0.5) break;
+  }
+
+  const leftData  = data.slice(0, splitIdx);
+  const rightData = data.slice(splitIdx);
+  const leftFrac  = leftData.reduce((s, d) => s + d.value, 0) / total;
+  const horiz     = depth % 2 === 0; // alternate H / V
+
+  const [leftPoly, rightPoly] = splitByFraction(polygon, leftFrac, horiz);
+
+  return [
+    ...partitionPolygon(leftPoly,  leftData,  depth + 1),
+    ...partitionPolygon(rightPoly, rightData, depth + 1),
+  ];
+}
+
+/** Build per-fuel cells with exactly proportional areas from a circle. */
+function computePartition(data, cx, cy, radius) {
   if (!data.length) return [];
   if (data.length === 1) {
-    const poly = circleClipPoly(cx, cy, radius, 64);
-    return [{ ...data[0], polygon: poly }];
+    return [{ ...data[0], polygon: circleClipPoly(cx, cy, radius, 72) }];
   }
-
-  const total    = data.reduce((s, d) => s + d.value, 0);
-  const clip     = circleClipPoly(cx, cy, radius, 72);
-  const bounds   = [cx - radius - 1, cy - radius - 1, cx + radius + 1, cy + radius + 1];
-  const circArea = Math.PI * radius * radius;
-  let sites      = initSites(data, cx, cy, radius);
-
-  for (let it = 0; it < WCVT_ITERS; it++) {
-    const del = d3.Delaunay.from(sites);
-    const vor = del.voronoi(bounds);
-    sites = sites.map((s, i) => {
-      const raw  = vor.cellPolygon(i);
-      if (!raw) return s;
-      const cell = clipToConvex(Array.from(raw), clip);
-      if (cell.length < 3) return s;
-      const area   = polyArea(cell);
-      const target = (data[i].value / total) * circArea;
-      const [gx, gy] = polyCentroid(cell);
-      const alpha = 0.42;
-      let nx = s[0] + alpha * (gx - s[0]);
-      let ny = s[1] + alpha * (gy - s[1]);
-      if (area > 1e-6) {
-        const ratio = target / area;
-        // Log-scale correction: ln(ratio) grows fast for large discrepancies
-        // (linear correction fails when ratio >> 1 or ratio << 1).
-        const correction = Math.sign(ratio - 1) *
-                           Math.min(0.48, Math.abs(Math.log(ratio)) * 0.28);
-        const dx = s[0] - cx, dy = s[1] - cy;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist > 1e-6) { nx -= (dx / dist) * radius * correction; ny -= (dy / dist) * radius * correction; }
-      }
-      const ddx = nx - cx, ddy = ny - cy;
-      const d2  = Math.sqrt(ddx * ddx + ddy * ddy);
-      if (d2 > radius * 0.94) {
-        const sc = (radius * 0.94) / d2;
-        return [cx + ddx * sc, cy + ddy * sc];
-      }
-      return [nx, ny];
-    });
-  }
-
-  const del = d3.Delaunay.from(sites);
-  const vor = del.voronoi(bounds);
-  return data.map((d, i) => {
-    const raw  = vor.cellPolygon(i);
-    const poly = raw ? clipToConvex(Array.from(raw), clip) : null;
-    return { ...d, polygon: poly, site: sites[i] };
-  });
+  const circlePoly = circleClipPoly(cx, cy, radius, 72);
+  return partitionPolygon(circlePoly, data, 0);
 }
 
 // ─── EnergyRiskChart ──────────────────────────────────────────────────────────
@@ -253,17 +263,33 @@ export class EnergyRiskChart {
       const cumVal   = this._cumVal(step);
       const radius   = this._radius(cumVal);
 
-      // WCVT with one cell per fuel (aggregated weight)
-      const cells = computeWCVT(fuelData, this.cx, this.cy, radius);
+      // Exact-area partition (recursive binary split of the circle)
+      const cells = computePartition(fuelData, this.cx, this.cy, radius);
+
+      // ── Dot count from ACTUAL cell area, not target value ─────────────────
+      // This guarantees uniform dot density across all cells regardless of
+      // how well the WCVT converged. The areas do the proportionality work;
+      // dots just fill each area evenly.
+      const totalActualArea = cells.reduce((s, c) =>
+        s + (c.polygon ? polyArea(c.polygon) : 0), 0);
+      const totalDots = Math.max(MIN_DOTS * cells.length,
+                                 Math.round(cumVal * DOTS_PER_UNIT));
 
       cells.forEach(cell => {
-        const totalCount = Math.max(MIN_DOTS, Math.round(cell.value     * DOTS_PER_UNIT));
-        const prevCount  = Math.max(0,        Math.round(cell.prevValue * DOTS_PER_UNIT));
-        // Sample ALL particle positions inside the polygon for this step
-        cell.particles   = cell.polygon ? sampleInPolygon(cell.polygon, totalCount) : [];
-        cell.totalCount  = totalCount;
-        cell.prevCount   = prevCount;
-        cell.newCount    = totalCount - prevCount;
+        const actualArea = cell.polygon ? polyArea(cell.polygon) : 0;
+        const totalCount = Math.max(MIN_DOTS,
+          Math.round((actualArea / totalActualArea) * totalDots));
+
+        // prevCount: how many dots this fuel had in the previous step layout
+        // (look up actual count, not recompute from value)
+        const prevLayout = this.layouts[step - 1];
+        const prevCell   = prevLayout?.cells.find(c => c.fuel === cell.fuel);
+        const prevCount  = prevCell?.totalCount || 0;
+
+        cell.particles  = cell.polygon ? sampleInPolygon(cell.polygon, totalCount) : [];
+        cell.totalCount = totalCount;
+        cell.prevCount  = prevCount;
+        cell.newCount   = Math.max(0, totalCount - prevCount);
       });
 
       this.layouts[step] = { cells, radius, cumVal };
