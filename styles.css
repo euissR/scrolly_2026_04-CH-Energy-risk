@@ -117,6 +117,19 @@
   font-family: inherit;
 }
 
+/* ── highlights ──────────────────────────────────────────────── */
+
+.hl-coal         { text-decoration: underline; text-decoration-color: #33163a; text-decoration-thickness: 3px; }
+.hl-gas-pipeline { text-decoration: underline; text-decoration-color: #1d3956; text-decoration-thickness: 3px; }
+.hl-gas-excl     { text-decoration: underline; text-decoration-color: #376882; text-decoration-thickness: 3px; }
+.hl-gas-lng      { text-decoration: underline; text-decoration-color: #309ebe; text-decoration-thickness: 3px; }
+.hl-oil          { text-decoration: underline; text-decoration-color: #df3144; text-decoration-thickness: 3px; }
+.hl-uranium      { text-decoration: underline; text-decoration-color: #595959; text-decoration-thickness: 3px; }
+.hl-hydro        { text-decoration: underline; text-decoration-color: #64C2C7; text-decoration-thickness: 3px; }
+.hl-wind-on      { text-decoration: underline; text-decoration-color: #99cb92; text-decoration-thickness: 3px; }
+.hl-wind-off     { text-decoration: underline; text-decoration-color: #4cb748; text-decoration-thickness: 3px; }
+.hl-solar        { text-decoration: underline; text-decoration-color: #ffde75; text-decoration-thickness: 3px; }
+
 /* ── Tooltip (shared with existing publications) ─────────── */
 
 .tooltip,
