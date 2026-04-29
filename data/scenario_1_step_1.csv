@@ -1,6 +1,6 @@
 fuel,name,value,scenario,dots,step,filename
 Gas (pipeline),Supply Shock,0.2161715163351998,1,32,1,scenario 1 step 1.csv
-Gas (pipeline excluding NO and UK),Supply Shock,0.07174490203571683,1,11,1,scenario 1 step 1.csv
+"Gas (pipeline, excluding Norway and United Kingdom)",Supply Shock,0.07174490203571683,1,11,1,scenario 1 step 1.csv
 Gas (LNG),Supply Shock,0.2499173595888469,1,37,1,scenario 1 step 1.csv
 Oil and petroleum products,Supply Shock,0.325765033320805,1,49,1,scenario 1 step 1.csv
 Coal,Supply Shock,0.03148593291224001,1,5,1,scenario 1 step 1.csv

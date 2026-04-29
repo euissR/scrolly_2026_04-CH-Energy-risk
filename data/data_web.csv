@@ -1,0 +1,97 @@
+fuel,name,value,scenario,dots,step,filename,value_scenario
+Gas (pipeline),Supply Shock,0.2161715163351998,1,32,1,scenario 1 step 1.csv,2.0996627778377497
+"Gas (pipeline, excluding Norway and United Kingdom)",Supply Shock,0.07174490203571683,1,11,1,scenario 1 step 1.csv,2.0996627778377497
+Gas (LNG),Supply Shock,0.2499173595888469,1,37,1,scenario 1 step 1.csv,2.0996627778377497
+Oil and petroleum products,Supply Shock,0.325765033320805,1,49,1,scenario 1 step 1.csv,2.0996627778377497
+Coal,Supply Shock,0.03148593291224001,1,5,1,scenario 1 step 1.csv,2.0996627778377497
+Uranium (AVERAGE),Supply Shock,0.04839837964494104,1,7,1,scenario 1 step 1.csv,2.0996627778377497
+Gas (pipeline),Price Shock,0.3059127540000001,1,46,2,scenario 1 step 2.csv,2.0996627778377497
+"Gas (pipeline, excluding Norway and United Kingdom)",Price Shock,0.3059127540000001,1,46,2,scenario 1 step 2.csv,2.0996627778377497
+Gas (LNG),Price Shock,0.2570968890000001,1,39,2,scenario 1 step 2.csv,2.0996627778377497
+Oil and petroleum products,Price Shock,0.211534617,1,32,2,scenario 1 step 2.csv,2.0996627778377497
+Coal,Price Shock,0.02329068,1,3,2,scenario 1 step 2.csv,2.0996627778377497
+Uranium (AVERAGE),Price Shock,0.05243196,1,8,2,scenario 1 step 2.csv,2.0996627778377497
+Gas (pipeline),Supply Shock,0.2269267334690611,2,34,1,scenario 2 step 1.csv,3.528404135570488
+"Gas (pipeline, excluding Norway and United Kingdom)",Supply Shock,0.07334856835441181,2,11,1,scenario 2 step 1.csv,3.528404135570488
+Gas (LNG),Supply Shock,0.2579766472599245,2,39,1,scenario 2 step 1.csv,3.528404135570488
+Oil and petroleum products,Supply Shock,0.3260983992622091,2,49,1,scenario 2 step 1.csv,3.528404135570488
+Coal,Supply Shock,0.0310822,2,5,1,scenario 2 step 1.csv,3.528404135570488
+Uranium (AVERAGE),Supply Shock,0.0495998910427699,2,7,1,scenario 2 step 1.csv,3.528404135570488
+Gas (pipeline),Price Shock,0.3454201080000001,2,52,2,scenario 2 step 2.csv,3.528404135570488
+"Gas (pipeline, excluding Norway and United Kingdom)",Price Shock,0.3454201080000001,2,52,2,scenario 2 step 2.csv,3.528404135570488
+Gas (LNG),Price Shock,0.2902998780000001,2,44,2,scenario 2 step 2.csv,3.528404135570488
+Oil and petroleum products,Price Shock,0.239998374,2,36,2,scenario 2 step 2.csv,3.528404135570488
+Coal,Price Shock,0.02645016000000001,2,4,2,scenario 2 step 2.csv,3.528404135570488
+Uranium (AVERAGE),Price Shock,0.05948712000000001,2,9,2,scenario 2 step 2.csv,3.528404135570488
+Gas (pipeline),Storage loss addition,0.4822877766836284,2,72,3,scenario 2 step 3.csv,3.528404135570488
+"Gas (pipeline, excluding Norway and United Kingdom)",Storage loss addition,0.1573700998490439,2,24,3,scenario 2 step 3.csv,3.528404135570488
+Gas (LNG),Storage loss addition,0.6166380716494388,2,92,3,scenario 2 step 3.csv,3.528404135570488
+Oil and petroleum products,Cost increase,0.009904065658594863,3,1,1,scenario 3 step 1.csv,0.04418700095726376
+Uranium (AVERAGE),Cost increase,0.00370240198701918,3,1,1,scenario 3 step 1.csv,0.04418700095726376
+Onshore Wind,Cost increase,0.0034322141204555048,3,1,1,scenario 3 step 1.csv,0.04418700095726376
+Offshore Wind,Cost increase,0.009901609580097169,3,1,1,scenario 3 step 1.csv,0.04418700095726376
+Solar,Cost increase,0.004151478047900639,3,1,1,scenario 3 step 1.csv,0.04418700095726376
+Offshore Wind,Mineral supply shock,0.0130952315631964,3,2,2,scenario 3 step 2.csv,0.04418700095726376
+Gas (pipeline),Supply Shock,0.2258758326703997,4,34,1,scenario 4 step 1.csv,15.565107135899499
+"Gas (pipeline, excluding Norway and United Kingdom)",Supply Shock,0.07354180407143367,4,11,1,scenario 4 step 1.csv,15.565107135899499
+Gas (LNG),Supply Shock,0.2586347191776939,4,39,1,scenario 4 step 1.csv,15.565107135899499
+Oil and petroleum products,Supply Shock,0.3280724666416102,4,49,1,scenario 4 step 1.csv,15.565107135899499
+Coal,Supply Shock,0.03188966582448,4,5,1,scenario 4 step 1.csv,15.565107135899499
+Uranium (AVERAGE),Supply Shock,0.050204759,4,8,1,scenario 4 step 1.csv,15.565107135899499
+Gas (pipeline),Storage loss addition,1.758768363207559,4,264,2,scenario 4 step 2.csv,15.565107135899499
+"Gas (pipeline, excluding Norway and United Kingdom)",Storage loss addition,0.5958444221147104,4,89,2,scenario 4 step 2.csv,15.565107135899499
+Gas (LNG),Storage loss addition,2.239244133986056,4,336,2,scenario 4 step 2.csv,15.565107135899499
+Coal,Storage loss addition,0.06683074854941924,4,10,2,scenario 4 step 2.csv,15.565107135899499
+Gas (pipeline),Price Shock + Minerals,0.3500807982661051,4,53,3,scenario 4 step 3.csv,15.565107135899499
+"Gas (pipeline, excluding Norway and United Kingdom)",Price Shock + Minerals,0.3500807982661051,4,53,3,scenario 4 step 3.csv,15.565107135899499
+Gas (LNG),Price Shock + Minerals,0.3139007982661051,4,47,3,scenario 4 step 3.csv,15.565107135899499
+Oil and petroleum products,Price Shock + Minerals,0.3531271814044012,4,53,3,scenario 4 step 3.csv,15.565107135899499
+Coal,Price Shock + Minerals,0.0440349761238133,4,7,3,scenario 4 step 3.csv,15.565107135899499
+Uranium (AVERAGE),Price Shock + Minerals,0.083212618,4,12,3,scenario 4 step 3.csv,15.565107135899499
+Hydro,Price Shock + Minerals,0.01261089552694048,4,2,3,scenario 4 step 3.csv,15.565107135899499
+Onshore Wind,Price Shock + Minerals,0.02550771536637286,4,4,3,scenario 4 step 3.csv,15.565107135899499
+Offshore Wind,Price Shock + Minerals,0.02644661520667845,4,4,3,scenario 4 step 3.csv,15.565107135899499
+Solar,Price Shock + Minerals,0.01273871787362031,4,2,3,scenario 4 step 3.csv,15.565107135899499
+Gas (pipeline),Hybrid war pain,1.8301794613688,4,275,4,scenario 4 step 4.csv,15.565107135899499
+"Gas (pipeline, excluding Norway and United Kingdom)",Hybrid war pain,1.763859507338396,4,265,4,scenario 4 step 4.csv,15.565107135899499
+Gas (LNG),Hybrid war pain,1.349787305465618,4,202,4,scenario 4 step 4.csv,15.565107135899499
+Oil and petroleum products,Hybrid war pain,2.699766070782715,4,405,4,scenario 4 step 4.csv,15.565107135899499
+Coal,Hybrid war pain,0.2131283027239406,4,32,4,scenario 4 step 4.csv,15.565107135899499
+Uranium (AVERAGE),Hybrid war pain,0.375424,4,56,4,scenario 4 step 4.csv,15.565107135899499
+Hydro,Hybrid war pain,0.04360369515109399,4,7,4,scenario 4 step 4.csv,15.565107135899499
+Onshore Wind,Hybrid war pain,0.03385736041717812,4,5,4,scenario 4 step 4.csv,15.565107135899499
+Offshore Wind,Hybrid war pain,0.03511004372513547,4,5,4,scenario 4 step 4.csv,15.565107135899499
+Solar,Hybrid war pain,0.01974335938311801,4,3,4,scenario 4 step 4.csv,15.565107135899499
+Gas (pipeline),Supply Shock,0.3177017168104395,5,48,1,scenario 5 step 1.csv,54.57509224686949
+"Gas (pipeline, excluding Norway and United Kingdom)",Supply Shock,0.1024864024145755,5,15,1,scenario 5 step 1.csv,54.57509224686949
+Gas (LNG),Supply Shock,0.3667292628396162,5,55,1,scenario 5 step 1.csv,54.57509224686949
+Oil and petroleum products,Supply Shock,0.4755489178016503,5,71,1,scenario 5 step 1.csv,54.57509224686949
+Coal,Supply Shock,0.04859275228842638,5,7,1,scenario 5 step 1.csv,54.57509224686949
+Uranium (Average),Supply Shock,0.076516783,5,11,1,scenario 5 step 1.csv,54.57509224686949
+Onshore Wind,Supply Shock,0.003984922930982822,5,1,1,scenario 5 step 1.csv,54.57509224686949
+Offshore Wind,Supply Shock,0.01149612165342757,5,2,1,scenario 5 step 1.csv,54.57509224686949
+Solar,Supply Shock,0.006029742988962439,5,1,1,scenario 5 step 1.csv,54.57509224686949
+Gas (pipeline),Storage loss addition,4.512580208123429,5,677,2,scenario 5 step 2.csv,54.57509224686949
+"Gas (pipeline, excluding Norway and United Kingdom)",Storage loss addition,1.52879469667733,5,229,2,scenario 5 step 2.csv,54.57509224686949
+Gas (LNG),Storage loss addition,5.654513409296142,5,848,2,scenario 5 step 2.csv,54.57509224686949
+Coal,Storage loss addition,0.1950732258226046,5,29,2,scenario 5 step 2.csv,54.57509224686949
+Gas (pipeline),Price Shock + Minerals,0.34974,5,52,3,scenario 5 step 3.csv,54.57509224686949
+"Gas (pipeline, excluding Norway and United Kingdom)",Price Shock + Minerals,0.34974,5,52,3,scenario 5 step 3.csv,54.57509224686949
+Gas (LNG),Price Shock + Minerals,0.31356,5,47,3,scenario 5 step 3.csv,54.57509224686949
+Oil and petroleum products,Price Shock + Minerals,0.351436,5,53,3,scenario 5 step 3.csv,54.57509224686949
+Coal,Price Shock + Minerals,0.043804,5,7,3,scenario 5 step 3.csv,54.57509224686949
+Uranium (Average),Price Shock + Minerals,0.082656,5,12,3,scenario 5 step 3.csv,54.57509224686949
+Hydro,Price Shock + Minerals,0.012528,5,2,3,scenario 5 step 3.csv,54.57509224686949
+Onshore Wind,Price Shock + Minerals,0.0250096,5,4,3,scenario 5 step 3.csv,54.57509224686949
+Offshore Wind,Price Shock + Minerals,0.0250096,5,4,3,scenario 5 step 3.csv,54.57509224686949
+Solar,Price Shock + Minerals,0.011985,5,2,3,scenario 5 step 3.csv,54.57509224686949
+Gas (pipeline),Kinetic war pain,7.651825417785525,5,1148,4,scenario 5 step 4.csv,54.57509224686949
+"Gas (pipeline, excluding Norway and United Kingdom)",Kinetic war pain,7.376406645265122,5,1106,4,scenario 5 step 4.csv,54.57509224686949
+Gas (LNG),Kinetic war pain,5.663119470509145,5,849,4,scenario 5 step 4.csv,54.57509224686949
+Oil and petroleum products,Kinetic war pain,16.23729549002102,5,2436,4,scenario 5 step 4.csv,54.57509224686949
+Coal,Kinetic war pain,0.9094009863391349,5,136,4,scenario 5 step 4.csv,54.57509224686949
+Uranium (Average),Kinetic war pain,1.347148262,5,202,4,scenario 5 step 4.csv,54.57509224686949
+Hydro,Kinetic war pain,0.1655577804491418,5,25,4,scenario 5 step 4.csv,54.57509224686949
+Onshore Wind,Kinetic war pain,0.1291708877421758,5,19,4,scenario 5 step 4.csv,54.57509224686949
+Offshore Wind,Kinetic war pain,0.1436419257882558,5,22,4,scenario 5 step 4.csv,54.57509224686949
+Solar,Kinetic war pain,0.08600901832237977,5,13,4,scenario 5 step 4.csv,54.57509224686949

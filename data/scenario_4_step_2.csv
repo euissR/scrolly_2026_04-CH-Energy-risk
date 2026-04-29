@@ -1,11 +1,11 @@
 fuel,name,value,scenario,dots,step,filename
 Gas (pipeline),Supply Shock,0.2258758326703997,4,34,1,scenario 4 step 1.csv
-Gas (pipeline excluding NO and UK),Supply Shock,0.07354180407143367,4,11,1,scenario 4 step 1.csv
+"Gas (pipeline, excluding Norway and United Kingdom)",Supply Shock,0.07354180407143367,4,11,1,scenario 4 step 1.csv
 Gas (LNG),Supply Shock,0.2586347191776939,4,39,1,scenario 4 step 1.csv
 Oil and petroleum products,Supply Shock,0.3280724666416102,4,49,1,scenario 4 step 1.csv
 Coal,Supply Shock,0.03188966582448,4,5,1,scenario 4 step 1.csv
 Uranium (AVERAGE),Supply Shock,0.050204759,4,8,1,scenario 4 step 1.csv
 Gas (pipeline),Storage loss addition,1.758768363207559,4,264,2,scenario 4 step 2.csv
-Gas (pipeline excluding NO and UK),Storage loss addition,0.5958444221147104,4,89,2,scenario 4 step 2.csv
+"Gas (pipeline, excluding Norway and United Kingdom)",Storage loss addition,0.5958444221147104,4,89,2,scenario 4 step 2.csv
 Gas (LNG),Storage loss addition,2.239244133986056,4,336,2,scenario 4 step 2.csv
 Coal,Storage loss addition,0.06683074854941924,4,10,2,scenario 4 step 2.csv

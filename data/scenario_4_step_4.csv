@@ -1,16 +1,16 @@
 fuel,name,value,scenario,dots,step,filename
 Gas (pipeline),Supply Shock,0.2258758326703997,4,34,1,scenario 4 step 1.csv
-Gas (pipeline excluding NO and UK),Supply Shock,0.07354180407143367,4,11,1,scenario 4 step 1.csv
+"Gas (pipeline, excluding Norway and United Kingdom)",Supply Shock,0.07354180407143367,4,11,1,scenario 4 step 1.csv
 Gas (LNG),Supply Shock,0.2586347191776939,4,39,1,scenario 4 step 1.csv
 Oil and petroleum products,Supply Shock,0.3280724666416102,4,49,1,scenario 4 step 1.csv
 Coal,Supply Shock,0.03188966582448,4,5,1,scenario 4 step 1.csv
 Uranium (AVERAGE),Supply Shock,0.050204759,4,8,1,scenario 4 step 1.csv
 Gas (pipeline),Storage loss addition,1.758768363207559,4,264,2,scenario 4 step 2.csv
-Gas (pipeline excluding NO and UK),Storage loss addition,0.5958444221147104,4,89,2,scenario 4 step 2.csv
+"Gas (pipeline, excluding Norway and United Kingdom)",Storage loss addition,0.5958444221147104,4,89,2,scenario 4 step 2.csv
 Gas (LNG),Storage loss addition,2.239244133986056,4,336,2,scenario 4 step 2.csv
 Coal,Storage loss addition,0.06683074854941924,4,10,2,scenario 4 step 2.csv
 Gas (pipeline),Price Shock + Minerals,0.3500807982661051,4,53,3,scenario 4 step 3.csv
-Gas (pipeline excluding NO and UK),Price Shock + Minerals,0.3500807982661051,4,53,3,scenario 4 step 3.csv
+"Gas (pipeline, excluding Norway and United Kingdom)",Price Shock + Minerals,0.3500807982661051,4,53,3,scenario 4 step 3.csv
 Gas (LNG),Price Shock + Minerals,0.3139007982661051,4,47,3,scenario 4 step 3.csv
 Oil and petroleum products,Price Shock + Minerals,0.3531271814044012,4,53,3,scenario 4 step 3.csv
 Coal,Price Shock + Minerals,0.0440349761238133,4,7,3,scenario 4 step 3.csv
@@ -20,7 +20,7 @@ Onshore Wind,Price Shock + Minerals,0.02550771536637286,4,4,3,scenario 4 step 3.
 Offshore Wind,Price Shock + Minerals,0.02644661520667845,4,4,3,scenario 4 step 3.csv
 Solar,Price Shock + Minerals,0.01273871787362031,4,2,3,scenario 4 step 3.csv
 Gas (pipeline),Hybrid war pain,1.8301794613688,4,275,4,scenario 4 step 4.csv
-Gas (pipeline excluding NO and UK),Hybrid war pain,1.763859507338396,4,265,4,scenario 4 step 4.csv
+"Gas (pipeline, excluding Norway and United Kingdom)",Hybrid war pain,1.763859507338396,4,265,4,scenario 4 step 4.csv
 Gas (LNG),Hybrid war pain,1.349787305465618,4,202,4,scenario 4 step 4.csv
 Oil and petroleum products,Hybrid war pain,2.699766070782715,4,405,4,scenario 4 step 4.csv
 Coal,Hybrid war pain,0.2131283027239406,4,32,4,scenario 4 step 4.csv
