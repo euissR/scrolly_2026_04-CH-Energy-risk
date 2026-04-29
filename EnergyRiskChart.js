@@ -199,7 +199,12 @@ export class EnergyRiskChart {
         })
         .on("mousemove", (event) => {
           this.tooltip
-            .style("left", event.pageX + 12 + "px")
+            .style(
+              "left",
+              event.pageX > window.innerWidth / 2
+                ? event.pageX - 120 + "px"
+                : event.pageX + 12 + "px",
+            )
             .style("top", event.pageY - 10 + "px");
         })
         .on("mouseout", () => this.tooltip.style("opacity", 0));
