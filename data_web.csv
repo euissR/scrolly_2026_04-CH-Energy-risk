@@ -67,7 +67,7 @@ Gas (pipeline),Supply Shock,0.3177017168104395,5,48,1,scenario 5 step 1.csv,54.5
 Gas (LNG),Supply Shock,0.3667292628396162,5,55,1,scenario 5 step 1.csv,54.57509224686949
 Oil and petroleum products,Supply Shock,0.4755489178016503,5,71,1,scenario 5 step 1.csv,54.57509224686949
 Coal,Supply Shock,0.04859275228842638,5,7,1,scenario 5 step 1.csv,54.57509224686949
-Uranium (Average),Supply Shock,0.076516783,5,11,1,scenario 5 step 1.csv,54.57509224686949
+Uranium,Supply Shock,0.076516783,5,11,1,scenario 5 step 1.csv,54.57509224686949
 Onshore Wind,Supply Shock,0.003984922930982822,5,1,1,scenario 5 step 1.csv,54.57509224686949
 Offshore Wind,Supply Shock,0.01149612165342757,5,2,1,scenario 5 step 1.csv,54.57509224686949
 Solar,Supply Shock,0.006029742988962439,5,1,1,scenario 5 step 1.csv,54.57509224686949
@@ -80,7 +80,7 @@ Gas (pipeline),Price Shock + Minerals,0.34974,5,52,3,scenario 5 step 3.csv,54.57
 Gas (LNG),Price Shock + Minerals,0.31356,5,47,3,scenario 5 step 3.csv,54.57509224686949
 Oil and petroleum products,Price Shock + Minerals,0.351436,5,53,3,scenario 5 step 3.csv,54.57509224686949
 Coal,Price Shock + Minerals,0.043804,5,7,3,scenario 5 step 3.csv,54.57509224686949
-Uranium (Average),Price Shock + Minerals,0.082656,5,12,3,scenario 5 step 3.csv,54.57509224686949
+Uranium,Price Shock + Minerals,0.082656,5,12,3,scenario 5 step 3.csv,54.57509224686949
 Hydro,Price Shock + Minerals,0.012528,5,2,3,scenario 5 step 3.csv,54.57509224686949
 Onshore Wind,Price Shock + Minerals,0.0250096,5,4,3,scenario 5 step 3.csv,54.57509224686949
 Offshore Wind,Price Shock + Minerals,0.0250096,5,4,3,scenario 5 step 3.csv,54.57509224686949
@@ -90,7 +90,7 @@ Gas (pipeline),Kinetic war pain,7.651825417785525,5,1148,4,scenario 5 step 4.csv
 Gas (LNG),Kinetic war pain,5.663119470509145,5,849,4,scenario 5 step 4.csv,54.57509224686949
 Oil and petroleum products,Kinetic war pain,16.23729549002102,5,2436,4,scenario 5 step 4.csv,54.57509224686949
 Coal,Kinetic war pain,0.9094009863391349,5,136,4,scenario 5 step 4.csv,54.57509224686949
-Uranium (Average),Kinetic war pain,1.347148262,5,202,4,scenario 5 step 4.csv,54.57509224686949
+Uranium,Kinetic war pain,1.347148262,5,202,4,scenario 5 step 4.csv,54.57509224686949
 Hydro,Kinetic war pain,0.1655577804491418,5,25,4,scenario 5 step 4.csv,54.57509224686949
 Onshore Wind,Kinetic war pain,0.1291708877421758,5,19,4,scenario 5 step 4.csv,54.57509224686949
 Offshore Wind,Kinetic war pain,0.1436419257882558,5,22,4,scenario 5 step 4.csv,54.57509224686949

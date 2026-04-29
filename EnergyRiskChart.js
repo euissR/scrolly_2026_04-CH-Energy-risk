@@ -2,16 +2,16 @@ import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7.8.5/+esm";
 
 // ─── Fuel → color mapping (fossil → renewable) ───────────────────────────────
 export const FUEL_COLORS = {
-  "Coal":                               "#33163A",
-  "Gas (pipeline)":                     "#343151",
-  "Gas (pipeline excluding NO and UK)": "#354C69",
-  "Gas (LNG)":                          "#376882",
-  "Oil and petroleum products":         "#468699",
-  "Uranium (AVERAGE)":                  "#55A4B0",
-  "Hydro":                              "#64C2C7",
-  "Onshore Wind":                       "#97CBAB",
-  "Offshore Wind":                      "#CBD490",
-  "Solar":                              "#FFDE75",
+  "Coal":                                                    "#33163a",
+  "Gas (pipeline)":                                          "#1d3956",
+  "Gas (pipeline, excluding Norway and United Kingdom)":     "#376882",
+  "Gas (LNG)":                                              "#309ebe",
+  "Oil and petroleum products":                             "#df3144",
+  "Uranium":                                                "#595959",
+  "Hydro":                                                  "#64C2C7",
+  "Onshore Wind":                                           "#99cb92",
+  "Offshore Wind":                                          "#4cb748",
+  "Solar":                                                  "#ffde75",
 };
 
 const DOTS_PER_UNIT  = 40;   // particles per unit of risk value
@@ -422,18 +422,35 @@ export class EnergyRiskChart {
 
     borderSel.exit().transition().duration(400).style("opacity", 0).remove();
 
-    borderSel.transition().delay(CELL_DELAY).duration(800)
-      .style("opacity", 1)
-      .attr("d", c => "M" + c.polygon.map(p => p[0].toFixed(1) + "," + p[1].toFixed(1)).join("L") + "Z");
+    borderSel
+      .attr("d", c => "M" + c.polygon.map(p => p[0].toFixed(1) + "," + p[1].toFixed(1)).join("L") + "Z")
+      .attr("fill", c => FUEL_COLORS[c.fuel] || "#aaa")
+      .transition().delay(CELL_DELAY).duration(600)
+      .style("opacity", 1);
 
     borderSel.enter().append("path")
       .attr("class", "fuel-border")
-      .attr("fill", "none")
+      .attr("fill", c => FUEL_COLORS[c.fuel] || "#aaa")
+      .attr("fill-opacity", 0)
       .attr("stroke", "#ccc")
       .attr("stroke-width", 1)
-      .style("pointer-events", "none")
+      .style("cursor", "default")
       .style("opacity", 0)
       .attr("d", c => "M" + c.polygon.map(p => p[0].toFixed(1) + "," + p[1].toFixed(1)).join("L") + "Z")
+      .on("mouseover", (event, c) => {
+        d3.select(event.currentTarget).attr("fill-opacity", 0.12);
+        this.tooltip.style("opacity", 1)
+          .html(`<strong>${c.fuel}</strong><br/>Risk index: ${c.value.toFixed(4)}`);
+      })
+      .on("mousemove", event => {
+        this.tooltip
+          .style("left", (event.pageX + 12) + "px")
+          .style("top",  (event.pageY - 10) + "px");
+      })
+      .on("mouseout", (event) => {
+        d3.select(event.currentTarget).attr("fill-opacity", 0);
+        this.tooltip.style("opacity", 0);
+      })
       .transition().delay(CELL_DELAY).duration(800)
       .style("opacity", 1);
 
@@ -473,19 +490,9 @@ export class EnergyRiskChart {
         .attr("r", PARTICLE_R)
         .attr("fill", color)
         .style("opacity", 0.9)
-        .style("pointer-events", "all")
+        .style("pointer-events", "none")
         .attr("cx", d => d.sx)
         .attr("cy", d => d.sy)
-        .on("mouseover", (event, d) => {
-          this.tooltip.style("opacity", 1)
-            .html(`<strong>${d.fuel}</strong><br/>Risk index: ${d.fuelValue.toFixed(4)}`);
-        })
-        .on("mousemove", event => {
-          this.tooltip
-            .style("left", (event.pageX + 12) + "px")
-            .style("top",  (event.pageY - 10) + "px");
-        })
-        .on("mouseout", () => this.tooltip.style("opacity", 0))
         .transition()
         .duration(FLIGHT_DUR)
         .ease(t => t * t)   // ease-in: accelerate into the circle
@@ -516,7 +523,7 @@ export class EnergyRiskChart {
     this.layouts = {};
     this._precompute();
     if (this.currentStep > 0) {
-      // Clear all fuel groups and borders
+      // Clear all fuel groups, borders and labels
       this.bordersGroup.selectAll("*").remove();
       this.fuelGroups.forEach(g => g.selectAll("*").remove());
       this.updateStep(this.currentStep);

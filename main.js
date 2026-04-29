@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // Normalise Uranium capitalisation inconsistency in source data
   rawData.forEach(d => {
-    if (d.fuel === "Uranium (Average)") d.fuel = "Uranium (AVERAGE)";
+    if (d.fuel === "Uranium (Average)" || d.fuel === "Uranium (AVERAGE)") d.fuel = "Uranium";
   });
 
   // ── Global scale: the highest scenario total drives the circle size ──────
