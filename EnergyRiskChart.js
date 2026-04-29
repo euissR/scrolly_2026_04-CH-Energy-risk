@@ -16,8 +16,8 @@ export const FUEL_COLORS = {
 
 const DOTS_PER_UNIT  = 40;   // particles per unit of risk value
 const MIN_DOTS       = 3;    // minimum new particles per step addition
-const WCVT_ITERS     = 50;
-const PARTICLE_R     = 2.5;  // px
+const WCVT_ITERS     = 150;
+const PARTICLE_R     = 3.75; // px
 const FLIGHT_DUR     = 900;  // ms — particle flight time
 const CELL_DELAY     = 650;  // ms — wait before circle/counter animate
 
@@ -124,14 +124,20 @@ function sampleInPolygon(polygon, n) {
 // ─── Weighted CVT ─────────────────────────────────────────────────────────────
 
 function initSites(data, cx, cy, radius) {
-  const total = data.reduce((s, d) => s + d.value, 0);
-  const phi   = Math.PI * (3 - Math.sqrt(5));
+  const total  = data.reduce((s, d) => s + d.value, 0);
+  const phi    = Math.PI * (3 - Math.sqrt(5));
+  // Sort descending so largest-weight cells start near the centre,
+  // which is a far better init for highly unequal weights.
+  const sorted = [...data].map((d, i) => ({ d, i }))
+                          .sort((a, b) => b.d.value - a.d.value);
+  const sites  = new Array(data.length);
   let cum = 0;
-  return data.map((d, i) => {
+  sorted.forEach(({ d, i }, k) => {
     cum += d.value / total;
-    const r = radius * 0.75 * Math.sqrt(Math.max(0, cum - d.value / total / 2));
-    return [cx + r * Math.cos(i * phi), cy + r * Math.sin(i * phi)];
+    const r = radius * 0.82 * Math.sqrt(Math.max(0, cum - d.value / total / 2));
+    sites[i] = [cx + r * Math.cos(k * phi), cy + r * Math.sin(k * phi)];
   });
+  return sites;
 }
 
 function computeWCVT(data, cx, cy, radius) {
@@ -158,20 +164,23 @@ function computeWCVT(data, cx, cy, radius) {
       const area   = polyArea(cell);
       const target = (data[i].value / total) * circArea;
       const [gx, gy] = polyCentroid(cell);
-      const alpha = 0.35;
+      const alpha = 0.42;
       let nx = s[0] + alpha * (gx - s[0]);
       let ny = s[1] + alpha * (gy - s[1]);
       if (area > 1e-6) {
-        const ratio      = target / area;
-        const correction = (ratio - 1) * 0.18;
+        const ratio = target / area;
+        // Log-scale correction: ln(ratio) grows fast for large discrepancies
+        // (linear correction fails when ratio >> 1 or ratio << 1).
+        const correction = Math.sign(ratio - 1) *
+                           Math.min(0.48, Math.abs(Math.log(ratio)) * 0.28);
         const dx = s[0] - cx, dy = s[1] - cy;
         const dist = Math.sqrt(dx * dx + dy * dy);
         if (dist > 1e-6) { nx -= (dx / dist) * radius * correction; ny -= (dy / dist) * radius * correction; }
       }
       const ddx = nx - cx, ddy = ny - cy;
       const d2  = Math.sqrt(ddx * ddx + ddy * ddy);
-      if (d2 > radius * 0.96) {
-        const sc = (radius * 0.96) / d2;
+      if (d2 > radius * 0.94) {
+        const sc = (radius * 0.94) / d2;
         return [cx + ddx * sc, cy + ddy * sc];
       }
       return [nx, ny];
@@ -290,6 +299,9 @@ export class EnergyRiskChart {
       .style("font-size", "36px").style("fill", "#333")
       .style("font-weight", "700").style("opacity", 0);
 
+    // Voronoi cell borders (rendered below particle clouds)
+    this.bordersGroup = this.svg.append("g").attr("class", "fuel-borders");
+
     // One <g> per fuel for particle clouds (z-order: all clouds below legend)
     this.fuelGroups = new Map();
     const fuels = [...new Set(this.scenarioData.map(d => d.fuel))];
@@ -351,13 +363,9 @@ export class EnergyRiskChart {
   // ── Spawn point (random edge) ─────────────────────────────────────────────
 
   _spawnPoint() {
-    const MARGIN = 80, W = this.width, H = this.height;
-    switch (Math.floor(Math.random() * 4)) {
-      case 0: return [-MARGIN,    Math.random() * H];
-      case 1: return [W + MARGIN, Math.random() * H];
-      case 2: return [Math.random() * W, -MARGIN];
-      default: return [Math.random() * W, H + MARGIN];
-    }
+    const MARGIN = 80, W = this.width;
+    // All particles rain in from the top edge
+    return [Math.random() * W, -MARGIN];
   }
 
   // ── Step update ───────────────────────────────────────────────────────────
@@ -382,7 +390,28 @@ export class EnergyRiskChart {
       .style("opacity", 1)
       .tween("text", () => t => vn.text(interp(t).toFixed(3)));
 
-    // ── 3. Particles per fuel ───────────────────────────────────────────────
+    // ── 3. Voronoi cell borders ────────────────────────────────────────────
+    const borderSel = this.bordersGroup.selectAll("path.fuel-border")
+      .data(cells.filter(c => c.polygon && c.polygon.length >= 3), c => c.fuel);
+
+    borderSel.exit().transition().duration(400).style("opacity", 0).remove();
+
+    borderSel.transition().delay(CELL_DELAY).duration(800)
+      .style("opacity", 1)
+      .attr("d", c => "M" + c.polygon.map(p => p[0].toFixed(1) + "," + p[1].toFixed(1)).join("L") + "Z");
+
+    borderSel.enter().append("path")
+      .attr("class", "fuel-border")
+      .attr("fill", "none")
+      .attr("stroke", "#ccc")
+      .attr("stroke-width", 1)
+      .style("pointer-events", "none")
+      .style("opacity", 0)
+      .attr("d", c => "M" + c.polygon.map(p => p[0].toFixed(1) + "," + p[1].toFixed(1)).join("L") + "Z")
+      .transition().delay(CELL_DELAY).duration(800)
+      .style("opacity", 1);
+
+    // ── 4. Particles per fuel ───────────────────────────────────────────────
     cells.forEach(cell => {
       const { fuel, particles, totalCount, prevCount } = cell;
       const g = this.fuelGroups.get(fuel);
@@ -461,7 +490,8 @@ export class EnergyRiskChart {
     this.layouts = {};
     this._precompute();
     if (this.currentStep > 0) {
-      // Clear all fuel groups
+      // Clear all fuel groups and borders
+      this.bordersGroup.selectAll("*").remove();
       this.fuelGroups.forEach(g => g.selectAll("*").remove());
       this.updateStep(this.currentStep);
     }
