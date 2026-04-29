@@ -26,8 +26,6 @@
 #visualization-scenario-4,
 #visualization-scenario-5 {
   width: 100%;
-  height: 100%;
-  max-height: 100vh;
   max-width: 1200px;
   display: flex;
   justify-content: center;
@@ -38,12 +36,11 @@
 
 .sticky-container {
   position: sticky;
-  top: 0;
+  top: 10vh;
   width: 100vw;
-  height: 100vh;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   z-index: 1;
   margin-left: calc(-50vw + 50%);
 }
@@ -59,7 +56,6 @@
   width: 50%;
   padding-right: 20px;
   padding-left:  20px;
-  margin: 0 auto; 
   z-index: 3;
   pointer-events: none;
   padding-bottom: 20vh;
@@ -116,19 +112,6 @@
 .risk-legend text {
   font-family: inherit;
 }
-
-/* ── highlights ──────────────────────────────────────────────── */
-
-.hl-coal         { text-decoration: underline; text-decoration-color: #33163a; text-decoration-thickness: 3px; }
-.hl-gas-pipeline { text-decoration: underline; text-decoration-color: #1d3956; text-decoration-thickness: 3px; }
-.hl-gas-excl     { text-decoration: underline; text-decoration-color: #376882; text-decoration-thickness: 3px; }
-.hl-gas-lng      { text-decoration: underline; text-decoration-color: #309ebe; text-decoration-thickness: 3px; }
-.hl-oil          { text-decoration: underline; text-decoration-color: #df3144; text-decoration-thickness: 3px; }
-.hl-uranium      { text-decoration: underline; text-decoration-color: #595959; text-decoration-thickness: 3px; }
-.hl-hydro        { text-decoration: underline; text-decoration-color: #64C2C7; text-decoration-thickness: 3px; }
-.hl-wind-on      { text-decoration: underline; text-decoration-color: #99cb92; text-decoration-thickness: 3px; }
-.hl-wind-off     { text-decoration: underline; text-decoration-color: #4cb748; text-decoration-thickness: 3px; }
-.hl-solar        { text-decoration: underline; text-decoration-color: #ffde75; text-decoration-thickness: 3px; }
 
 /* ── Tooltip (shared with existing publications) ─────────── */
 
