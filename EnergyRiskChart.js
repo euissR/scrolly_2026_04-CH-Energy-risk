@@ -158,7 +158,7 @@ export class EnergyRiskChart {
         .attr("dominant-baseline", "middle")
         .style("font-size", "11px")
         .style("font-weight", "600")
-        .style("fill", textColor(color))
+        .style("fill", "#fff")
         .style("pointer-events", "none")
         .style("opacity", 0)
         .text("0.00");
