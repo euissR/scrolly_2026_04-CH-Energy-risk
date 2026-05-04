@@ -158,7 +158,7 @@ export class EnergyRiskChart {
         .attr("dominant-baseline", "middle")
         .style("font-size", "11px")
         .style("font-weight", "600")
-        .style("fill", "#fff")
+        .style("fill", textColor(color))
         .style("pointer-events", "none")
         .style("opacity", 0)
         .text("0.00");
@@ -213,8 +213,9 @@ export class EnergyRiskChart {
 
   // ── Step update ───────────────────────────────────────────────────────────
 
-  updateStep(step) {
+  updateStep(step, highlights = []) {
     this.currentStep = step;
+    const dimming = highlights.length > 0;
 
     ALL_FUELS.forEach((fuel) => {
       const row = this.fuelRows.get(fuel);
@@ -224,22 +225,28 @@ export class EnergyRiskChart {
       const barW = this.xScale(cumVal);
       const barLeft = rightX - barW;
       const hasValue = cumVal > 0;
+      const isHighlighted = !dimming || highlights.includes(fuel);
+      const barOpacity = isHighlighted ? 1 : 0.15;
+      const labelOpacity = isHighlighted ? 1 : 0.25;
 
-      // Animate bar (grows left from rightX)
+      // Animate bar (grows left from rightX) + opacity
       bar
         .transition()
         .duration(ANIM_DUR)
         .ease(d3.easeCubicOut)
         .attr("x", barLeft)
-        .attr("width", barW);
+        .attr("width", barW)
+        .style("opacity", barOpacity);
 
-      // Fuel label: track left edge of bar
+      // Fuel label: track left edge of bar + dim if not highlighted
       fuelLabel
         .transition()
         .duration(ANIM_DUR)
         .ease(d3.easeCubicOut)
         .attr("x", barLeft - LABEL_PAD)
-        .style("fill", hasValue ? "#333" : "#bbb");
+        .style("fill", hasValue ? "#333" : "#bbb")
+        .style("font-weight", hasValue ? "700" : "500")
+        .style("opacity", labelOpacity);
 
       // Value inside bar: show only if bar is wide enough
       const showValue = barW >= MIN_BAR_W_LABEL;
@@ -251,9 +258,9 @@ export class EnergyRiskChart {
         .transition()
         .duration(ANIM_DUR)
         .ease(d3.easeCubicOut)
-        .attr("x", barLeft + LABEL_PAD) // inside bar, near left edge
+        .attr("x", barLeft + LABEL_PAD)
         .attr("text-anchor", "start")
-        .style("opacity", showValue ? 1 : 0)
+        .style("opacity", showValue && isHighlighted ? 1 : 0)
         .tween("text", () => (t) => {
           if (showValue) vi.text(interpV(t).toFixed(2));
         });
