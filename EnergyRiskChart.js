@@ -28,7 +28,7 @@ function textColor(hex) {
   const r = parseInt(hex.slice(1, 3), 16);
   const g = parseInt(hex.slice(3, 5), 16);
   const b = parseInt(hex.slice(5, 7), 16);
-  return (0.299 * r + 0.587 * g + 0.114 * b) / 255 > 0.45 ? "#333" : "#fff";
+  return (0.299 * r + 0.587 * g + 0.114 * b) / 255 > 0.7 ? "#333" : "#fff";
 }
 
 export class EnergyRiskChart {
@@ -55,7 +55,7 @@ export class EnergyRiskChart {
     this.rowH = usable / ALL_FUELS.length;
     this.barH = this.rowH - BAR_PAD * 2;
     // Usable bar width: full width minus right padding
-    this.maxBarW = this.width - PAD_RIGHT * 10;
+    this.maxBarW = this.width - PAD_RIGHT * 7;
 
     // xScale: value → bar width (grows left from right edge)
     this.xScale = d3
